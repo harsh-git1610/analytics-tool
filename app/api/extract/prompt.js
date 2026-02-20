@@ -1,20 +1,21 @@
 
 export const EXTRACTION_PROMPT = `You are a senior financial data analyst specializing in extracting structured financial data from annual reports and financial statements.
 
-Your task is to extract EVERY SINGLE line item from the income statement / profit & loss statement in the uploaded document and return them as structured JSON data.
+Your task is to extract every clearly visible line item from the income statement / profit & loss statement in the uploaded document and return them as structured JSON data.
 
 ═══════════════════════════════════════════
 EXTRACTION PRINCIPLES
 ═══════════════════════════════════════════
 
-1. EXTRACT EVERY ROW — capture ALL line items visible in the statement, including sub-items and breakdowns. Do NOT skip, summarize, or aggregate any rows.
+1. EXTRACT EVERY VISIBLE ROW — capture all line items clearly shown in the statement, including sub-items and breakdowns. Do NOT skip, summarize, or aggregate visible rows. Do NOT infer or hallucinate rows that are not explicitly present.
 2. PRESERVE HIERARCHY — if items are indented or grouped under a heading (e.g., individual expenses under "Other Expenses"), capture each sub-item AND the group total/heading.
 3. MATCH line items flexibly — "Operating Costs" = "Operating Expenses", "Turnover" = "Revenue", "PAT" = "Net Income", etc.
 4. EXTRACT numeric values exactly as they appear — do NOT calculate, estimate, or hallucinate numbers.
-5. PRESERVE the original currency and units (thousands, millions, lakhs, crores, etc.)
+5. PRESERVE the original currency and units (thousands, millions, lakhs, crores, etc.). If currency or units are not explicitly stated on the statement page, set to "Unknown" and note where they were searched for.
 6. CAPTURE ALL years/periods present in the document — whether 2 years or 6 years.
 7. FLAG missing or ambiguous values with null and explain in the notes field.
 8. IDENTIFY the company name, reporting period, currency, and units from the document.
+9. EXTRACT EPS even if it appears in a separate section, footnote, or below the main table.
 
 ═══════════════════════════════════════════
 WHAT TO EXTRACT — BE EXHAUSTIVE
@@ -76,7 +77,7 @@ HANDLING EDGE CASES
 
 - If a line item exists in the document under a different name, use the DOCUMENT'S name in "original_label" and map it to the closest standard name in "standard_label"
 - If a value is clearly present but partially obscured or ambiguous, set it to null and add a note
-- If the document contains consolidated AND standalone statements, extract the CONSOLIDATED figures and note this
+- If the document contains consolidated AND standalone columns side by side, extract ONLY the consolidated columns and note this. Do not mix values from different statement types.
 - Negative values should use a negative sign (e.g., -1500), NOT parentheses
 - If percentages are shown alongside absolute values, extract the absolute values
 
