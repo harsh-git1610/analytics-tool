@@ -4,7 +4,7 @@ import { ANALYST_PROMPT } from "./prompt";
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB per file
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB per file (Vercel Hobby limit)
 const ALLOWED_TYPES = [
   "application/pdf",
   "text/plain",
@@ -35,7 +35,7 @@ export async function POST(req) {
       if (file.size > MAX_FILE_SIZE) {
         const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
         return NextResponse.json(
-          { error: `"${fileName}" is too large (${sizeMB} MB). Maximum allowed size is 10 MB per file.` },
+          { error: `"${fileName}" is too large (${sizeMB} MB). Maximum allowed size is 4 MB per file.` },
           { status: 400 }
         );
       }

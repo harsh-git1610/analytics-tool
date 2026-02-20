@@ -90,7 +90,7 @@ function FileUploadZone({ files, setFiles, setError, acceptHint }) {
             Drop files here or <span className="text-stone-600 underline underline-offset-2">browse</span>
           </span>
         </div>
-        <p className="text-[11px] text-stone-400 mt-1.5">{acceptHint || "PDF or TXT · max 10 MB per file"}</p>
+        <p className="text-[11px] text-stone-400 mt-1.5">{acceptHint || "PDF or TXT · max 4 MB per file"}</p>
         <input
           id="file-upload"
           name="file-upload"
@@ -353,7 +353,7 @@ function EarningsAnalyzer() {
     <>
       <div className="bg-white border border-stone-200 rounded-lg p-6 mb-8">
         <form onSubmit={handleSubmit}>
-          <FileUploadZone files={files} setFiles={setFiles} setError={setError} acceptHint="PDF or TXT · max 10 MB per file" />
+          <FileUploadZone files={files} setFiles={setFiles} setError={setError} acceptHint="PDF or TXT · max 4 MB per file" />
           <div className="mt-4">
             <button type="submit" disabled={loading || files.length === 0}
               className={`w-full px-5 py-3 text-sm font-medium rounded-md transition-all duration-200 ${loading || files.length === 0
@@ -482,7 +482,7 @@ function FinancialExtractor() {
     <>
       <div className="bg-white border border-stone-200 rounded-lg p-6 mb-8">
         <form onSubmit={handleSubmit}>
-          <FileUploadZone files={files} setFiles={setFiles} setError={setError} acceptHint="Annual report or financial statement · PDF or TXT · max 10 MB" />
+          <FileUploadZone files={files} setFiles={setFiles} setError={setError} acceptHint="Annual report or financial statement · PDF or TXT · max 4 MB" />
           <div className="mt-4">
             <button type="submit" disabled={loading || files.length === 0}
               className={`w-full px-5 py-3 text-sm font-medium rounded-md transition-all duration-200 ${loading || files.length === 0
