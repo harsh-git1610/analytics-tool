@@ -36,28 +36,43 @@ function FileUploadZone({ files, setFiles, setError, acceptHint }) {
     else if (e.type === "dragleave") setDragActive(false);
   }, []);
 
+  const MAX_CLIENT_SIZE = 4 * 1024 * 1024; // 4 MB
+
+  const addFiles = useCallback((incoming) => {
+    const valid = [];
+    const oversized = [];
+    for (const f of incoming) {
+      if (f.size > MAX_CLIENT_SIZE) {
+        oversized.push(f.name);
+      } else {
+        valid.push(f);
+      }
+    }
+
+    if (oversized.length > 0) {
+      setError(`⚠ "${oversized.join('", "')}" exceeds 4 MB limit.`);
+    } else {
+      setError("");
+    }
+
+    if (valid.length > 0) {
+      setFiles((prev) => {
+        const names = new Set(prev.map((f) => f.name));
+        return [...prev, ...valid.filter((f) => !names.has(f.name))];
+      });
+    }
+  }, [setFiles, setError]);
+
   const handleDrop = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files?.length > 0) {
-      const dropped = Array.from(e.dataTransfer.files);
-      setFiles((prev) => {
-        const names = new Set(prev.map((f) => f.name));
-        return [...prev, ...dropped.filter((f) => !names.has(f.name))];
-      });
-      setError("");
-    }
-  }, [setFiles, setError]);
+    if (e.dataTransfer.files?.length) addFiles(Array.from(e.dataTransfer.files));
+  }, [addFiles]);
 
   const handleFileChange = (e) => {
-    if (e.target.files?.length > 0) {
-      const selected = Array.from(e.target.files);
-      setFiles((prev) => {
-        const names = new Set(prev.map((f) => f.name));
-        return [...prev, ...selected.filter((f) => !names.has(f.name))];
-      });
-      setError("");
+    if (e.target.files?.length) {
+      addFiles(Array.from(e.target.files));
       e.target.value = "";
     }
   };
@@ -363,11 +378,19 @@ function EarningsAnalyzer() {
             </button>
           </div>
           {error && (
-            <div className="flex items-center gap-2 mt-3 text-rose-600 text-xs">
-              <svg className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-              </svg>
-              {error}
+            <div className="mt-3 text-xs">
+              <div className="flex items-center gap-2 text-rose-600">
+                <svg className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                </svg>
+                {error}
+              </div>
+              {error.includes("exceeds 4 MB") && (
+                <a href="https://www.ilovepdf.com/compress_pdf" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 mt-1.5 ml-5.5 text-sky-600 hover:text-sky-700 underline underline-offset-2">
+                  Compress your PDF here →
+                </a>
+              )}
             </div>
           )}
         </form>
@@ -492,11 +515,19 @@ function FinancialExtractor() {
             </button>
           </div>
           {error && (
-            <div className="flex items-center gap-2 mt-3 text-rose-600 text-xs">
-              <svg className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-              </svg>
-              {error}
+            <div className="mt-3 text-xs">
+              <div className="flex items-center gap-2 text-rose-600">
+                <svg className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                </svg>
+                {error}
+              </div>
+              {error.includes("exceeds 4 MB") && (
+                <a href="https://www.ilovepdf.com/compress_pdf" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 mt-1.5 ml-5.5 text-sky-600 hover:text-sky-700 underline underline-offset-2">
+                  Compress your PDF here →
+                </a>
+              )}
             </div>
           )}
         </form>
