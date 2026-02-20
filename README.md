@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Earnings Call Analyzer
+
+A web application that transforms raw earnings call transcripts into structured, institutional-grade equity research reports using AI.
+
+Upload a PDF or text transcript → receive a comprehensive analyst report with sentiment analysis, key metrics, forward guidance assessment, red flags, and an independent analyst verdict.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **AI Engine:** Google Gemini 2.5 Flash via `@google/genai`
+- **Styling:** Tailwind CSS 4 with custom design tokens
+- **Rendering:** React Markdown with GFM support and custom styled components
+- **Runtime:** React 19
+
+## How It Works
+
+```
+┌──────────────┐     ┌──────────────────┐     ┌────────────────────┐
+│  Upload PDF  │────▶│  Next.js API      │────▶│  Gemini 2.5 Flash  │
+│  or TXT file │     │  Route Handler    │     │  (Analyst Prompt)  │
+└──────────────┘     └──────────────────┘     └────────┬───────────┘
+                                                       │
+                     ┌──────────────────┐              │
+                     │  Structured      │◀─────────────┘
+                     │  Research Report │
+                     └──────────────────┘
+```
+
+1. **File Upload** — User uploads an earnings call transcript (PDF or TXT)
+2. **AI Processing** — The API route sends the document to Gemini 2.5 Flash with a detailed analyst prompt covering 10 mandatory report sections
+3. **Report Rendering** — The structured markdown response is rendered with custom-styled components (color-coded credibility ratings, analyst annotations, financial tables)
+
+## Key Features
+
+- **Institutional-Grade Prompt** — 10-section report template covering sentiment, key positives/concerns, forward guidance (revenue, margins, capex), capacity utilization, growth initiatives, segment mix, management commitments, red flags, and analyst verdict
+- **Critical Annotations** — AI adds independent analyst notes distinguishing data from assertions, flagging vague guidance, and tracking management omissions
+- **Smart Rendering** — Custom markdown components with color-coded credibility ratings (Credible/Vague/Unverifiable), styled analyst notes, and responsive financial tables
+- **Native PDF Support** — PDFs are sent directly to Gemini as base64, handling both text-based and scanned documents without client-side parsing
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- A [Google AI Studio](https://aistudio.google.com/apikey) API key (free tier)
+
+### Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone the repository
+git clone <repo-url>
+cd analytics-tool
+
+# Install dependencies
+pnpm install
+
+# Create environment file
+cp .env.example .env
+# Add your Gemini API key to .env
+
+# Start the development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+| Variable | Description |
+|---|---|
+| `GEMINI_API_KEY` | Google Gemini API key from [AI Studio](https://aistudio.google.com/apikey) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+analytics-tool/
+├── app/
+│   ├── api/analyze/
+│   │   └── route.js        # Gemini API integration & analyst prompt
+│   ├── globals.css          # Design tokens & custom styles
+│   ├── layout.js            # Root layout with Inter font & metadata
+│   └── page.js              # Upload UI & report renderer
+├── public/                  # Static assets
+└── package.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy on [Vercel](https://vercel.com) — add `GEMINI_API_KEY` as an environment variable in Project Settings.
