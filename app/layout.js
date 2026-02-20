@@ -7,11 +7,11 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "AI Earnings Call Analyzer — Research Portal",
-  description: "Upload earnings call transcripts and receive institutional-grade equity research reports powered by Gemini AI.",
+  title: "AI Research Portal — Earnings Analysis & Financial Extraction",
+  description: "Upload earnings call transcripts for AI-driven research reports, or extract financial statement data into Excel-ready CSV files. Powered by Gemini AI.",
   openGraph: {
-    title: "AI Earnings Call Analyzer",
-    description: "Transform raw earnings call transcripts into structured analyst reports with AI-driven sentiment analysis, guidance assessment, and red flag detection.",
+    title: "AI Research Portal",
+    description: "AI-powered financial analysis: transform earnings call transcripts into analyst reports and extract income statement data from annual reports to spreadsheets.",
     type: "website",
   },
 };
