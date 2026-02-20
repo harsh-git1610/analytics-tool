@@ -531,7 +531,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-16 pt-6 border-t border-stone-200 text-center">
           <p className="text-xs text-stone-400">
-            Built with Next.js . Built by <a href="https://github.com/">Harsh Chauhan</a>
+            Built by <span className="text-blue-500 hover:underline cursor-pointer"><a href="https://harshchauhan1610.vercel.app/">Harsh Chauhan</a></span> 
           </p>
         </footer>
       </div>
